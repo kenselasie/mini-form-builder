@@ -22,7 +22,7 @@ const RenderFormPage = () => {
 
   return (
     <>
-      <div className="p-30 h-full bg-blue-50">
+      <div className="px-30 py-10 h-full bg-blue-50">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">Rendered Form</h1>
         </div>

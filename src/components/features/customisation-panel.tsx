@@ -56,13 +56,15 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
                   backgroundColor: color.value,
                 }))
               }
-              className={`h-6 w-6 rounded-full p-[3px] cursor-pointer border ${
+              className={`flex justify-center items-center h-6 w-6 rounded-full cursor-pointer ${
                 formData.backgroundColor === color.value
                   ? "border-black border-2"
-                  : "border-white"
+                  : ""
               }`}
             >
-              <div className={`w-full h-full rounded-full ${color.bgClass}`} />
+              <div
+                className={`size-[80%] border-gray-300 border-1 rounded-full ${color.bgClass}`}
+              />
             </div>
           ))}
         </div>
