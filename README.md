@@ -1,6 +1,6 @@
 # Mini Form Builder
 
-A Next.js 15 application for building forms dynamically.
+A NextJs/React mini form builder application. Build with shadcn components. Included both unit and end to end tests. Dynamic field names etc.
 
 ## Getting Started
 
@@ -50,7 +50,6 @@ yarn cypress:open
 - Dynamic form field creation
 - Real-time form preview
 - Field customization options
-- Drag and drop field reordering
 - Form validation
 - Responsive design
 
