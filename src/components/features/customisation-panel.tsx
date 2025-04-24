@@ -47,7 +47,7 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
             setFormData((prev) => ({ ...prev, backgroundColor: value }))
           }
         >
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-4">
             <RadioGroupItem
               data-testid="color-white"
               value="white"
