@@ -58,7 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarHeader>
       <SidebarContent className="bg-gray-800 text-white">
-        <NavSingles headerTitle="Main" items={data.main} />
+        <NavSingles headerTitle="" items={data.main} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

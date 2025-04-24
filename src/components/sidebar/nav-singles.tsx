@@ -17,7 +17,7 @@ export function NavSingles({
   headerTitle,
   items,
 }: {
-  headerTitle: string;
+  headerTitle?: string;
   items: {
     name: string;
     url: string;
