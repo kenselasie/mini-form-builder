@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini Form Builder
+
+A Next.js 15 application for building forms dynamically.
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
 
 ```bash
-npm run dev
-# or
+yarn install
+```
+
+Then, run the development server:
+
+```bash
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses Vitest for unit testing and Cypress for end-to-end testing.
 
-## Learn More
+### Running Unit Tests
 
-To learn more about Next.js, take a look at the following resources:
+To run unit tests:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Run tests in watch mode
+yarn test
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Run tests with UI
+yarn test:ui
 
-## Deploy on Vercel
+# Run tests with coverage report
+yarn test:coverage
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Running E2E Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To run Cypress tests:
+
+```bash
+yarn cypress:open
+```
+
+## Features
+
+- Dynamic form field creation
+- Real-time form preview
+- Field customization options
+- Drag and drop field reordering
+- Form validation
+- Responsive design
+
+## Project Structure
+
+```
+mini-form-builder/
+├── src/
+│   ├── components/
+│   │   ├── features/      # Feature components
+│   │   └── ui/           # UI components
+│   └── app/              # Next.js pages
+├── cypress/
+│   └── e2e/             # Integration tests
+└── public/              # Static assets
+```
