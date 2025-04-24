@@ -52,8 +52,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="bg-gray-800 text-white">
-        <div className="flex items-center space-x-2 mt-5">
-          <FileText />
+        <div className="flex items-center space-x-2 mt-5 ml-8">
+          <FileText color="blue" strokeWidth={1} />
           <span>Form Builder</span>
         </div>
       </SidebarHeader>

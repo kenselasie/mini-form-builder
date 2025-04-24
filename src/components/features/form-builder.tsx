@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Search } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -253,17 +253,19 @@ const FormBuilder = ({
           + Add New Field
         </Button>
       </div>
-      <div className="mb-4">
-        <Input
-          data-testid="field-search-input"
-          placeholder="Search..."
-          value={searchField}
-          onChange={(e) => setSearchField(e.target.value)}
-          className="mb-2"
-        />
+      <div className="mb-4 border-1 p-2 rounded-md">
+        <div className="relative mb-2">
+          <Input
+            data-testid="field-search-input"
+            placeholder="Search..."
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+          />
+          <Search className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
         <div
           data-testid="search-results"
-          className="border rounded-md max-h-40 overflow-y-auto"
+          className="rounded-md max-h-40 overflow-y-auto"
         >
           {fieldOptions
             .filter((option) =>
