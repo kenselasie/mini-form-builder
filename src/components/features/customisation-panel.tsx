@@ -1,7 +1,5 @@
 "use client";
 import * as React from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import {
   Select,
   SelectItem,
@@ -40,64 +38,34 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
         <label className="block text-md font-semibold mb-1">
           Background Color
         </label>
-        <RadioGroup
-          data-testid="background-color-group"
-          value={formData.backgroundColor}
-          onValueChange={(value) =>
-            setFormData((prev) => ({ ...prev, backgroundColor: value }))
-          }
-        >
-          <div className="flex flex-wrap items-center gap-4">
-            <RadioGroupItem
-              data-testid="color-white"
-              value="white"
-              id="white"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+        <div className="flex flex-wrap items-center gap-4">
+          {[
+            { value: "white", bgClass: "bg-white" },
+            { value: "green", bgClass: "bg-green-300" },
+            { value: "yellow", bgClass: "bg-yellow-300" },
+            { value: "blue", bgClass: "bg-blue-300" },
+            { value: "pink", bgClass: "bg-pink-300" },
+            { value: "black", bgClass: "bg-black" },
+          ].map((color) => (
+            <div
+              key={color.value}
+              data-testid={`color-${color.value}`}
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  backgroundColor: color.value,
+                }))
+              }
+              className={`h-6 w-6 rounded-full p-[3px] cursor-pointer border ${
+                formData.backgroundColor === color.value
+                  ? "border-black border-2"
+                  : "border-white"
+              }`}
             >
-              <div className="w-full h-full rounded-full bg-white" />
-            </RadioGroupItem>
-            <RadioGroupItem
-              data-testid="color-green"
-              value="green"
-              id="green"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
-            >
-              <div className="w-full h-full rounded-full bg-green-300" />
-            </RadioGroupItem>
-            <RadioGroupItem
-              data-testid="color-yellow"
-              value="yellow"
-              id="yellow"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
-            >
-              <div className="w-full h-full rounded-full bg-yellow-300" />
-            </RadioGroupItem>
-            <RadioGroupItem
-              data-testid="color-blue"
-              value="blue"
-              id="blue"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
-            >
-              <div className="w-full h-full rounded-full bg-blue-300" />
-            </RadioGroupItem>
-            <RadioGroupItem
-              data-testid="color-pink"
-              value="pink"
-              id="pink"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
-            >
-              <div className="w-full h-full rounded-full bg-pink-300" />
-            </RadioGroupItem>
-            <RadioGroupItem
-              data-testid="color-black"
-              value="black"
-              id="black"
-              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
-            >
-              <div className="w-full h-full rounded-full bg-black" />
-            </RadioGroupItem>
-          </div>
-        </RadioGroup>
+              <div className={`w-full h-full rounded-full ${color.bgClass}`} />
+            </div>
+          ))}
+        </div>
       </div>
       <div className="mb-7">
         <label className="block text-md font-semibold mb-1">Font Family</label>{" "}
@@ -107,7 +75,10 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
             setFormData((prev) => ({ ...prev, fontFamily: value }))
           }
         >
-          <SelectTrigger data-testid="font-family-select" className="w-full">
+          <SelectTrigger
+            data-testid="font-family-select"
+            className="w-full border-gray-400"
+          >
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <SelectContent>

@@ -20,7 +20,8 @@ describe("Customisation Panel", () => {
   });
 
   it("should change background color when selecting different colors", () => {
-    cy.get('[data-testid="background-color-group"]').should("exist");
+    // Direct color selection without checking for radio group
+    cy.get('[data-testid="color-white"]').should("exist");
     cy.get('[data-testid="color-white"]').click();
     cy.get('[data-testid="color-white"]').should("have.class", "border-black");
   });

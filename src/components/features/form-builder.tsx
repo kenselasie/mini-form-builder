@@ -106,7 +106,7 @@ const FormBuilder = ({
           <input
             data-testid="form-title-input"
             placeholder="Form Title"
-            className="w-full bg-transparent border-none outline-none focus:ring-0 focus:outline-none focus:border-none active:outline-none active:ring-0 text-xl font-bold placeholder:text-xl placeholder:font-bold"
+            className="w-full bg-transparent outline-none focus:ring-0 focus:outline-none focus:border-none active:outline-none active:ring-0 text-xl font-bold placeholder:text-xl placeholder:font-bold"
             value={formTitle}
             onChange={handleTitleChange}
           />
@@ -132,6 +132,7 @@ const FormBuilder = ({
               <Input
                 data-testid={`field-input-${field.id}`}
                 placeholder={field.label}
+                className="border-2 border-gray-500 rounded"
                 value={field.value}
                 disabled
                 onChange={(e) => handleFieldChange(field.id, e.target.value)}
@@ -195,9 +196,9 @@ const FormBuilder = ({
             <DropdownMenu>
               <DropdownMenuTrigger
                 data-testid={`field-menu-${field.id}`}
-                className="w-10 h-10 flex items-center justify-center"
+                className="w-9 h-9 flex items-center justify-center border border-gray-500 rounded"
               >
-                <MoreVertical />
+                <MoreVertical size={16} />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 data-testid={`field-menu-content-${field.id}`}
@@ -261,11 +262,12 @@ const FormBuilder = ({
           + Add New Field
         </Button>
       </div>
-      <div className="mb-4 border-1 p-2 rounded-md">
+      <div className="mb-4 border-2 border-gray-300 p-2 rounded-md">
         <div className="relative mb-2">
           <Input
             data-testid="field-search-input"
             placeholder="Search..."
+            className="border-2 border-gray-400 rounded"
             value={searchField}
             onChange={(e) => setSearchField(e.target.value)}
           />
