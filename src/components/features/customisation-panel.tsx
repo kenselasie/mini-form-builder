@@ -52,62 +52,50 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
               data-testid="color-white"
               value="white"
               id="white"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "white"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-white`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-white" />
+            </RadioGroupItem>
             <RadioGroupItem
               data-testid="color-green"
               value="green"
               id="green"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "green"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-green-300`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-green-300" />
+            </RadioGroupItem>
             <RadioGroupItem
               data-testid="color-yellow"
               value="yellow"
               id="yellow"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "yellow"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-yellow-300`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-yellow-300" />
+            </RadioGroupItem>
             <RadioGroupItem
               data-testid="color-blue"
               value="blue"
               id="blue"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "blue"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-blue-300`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-blue-300" />
+            </RadioGroupItem>
             <RadioGroupItem
               data-testid="color-pink"
               value="pink"
               id="pink"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "pink"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-pink-300`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-pink-300" />
+            </RadioGroupItem>
             <RadioGroupItem
               data-testid="color-black"
               value="black"
               id="black"
-              className={`h-6 w-6 rounded-full border ${
-                formData.backgroundColor === "black"
-                  ? "border-black"
-                  : "border-gray-300"
-              } bg-black`}
-            />
+              className="h-6 w-6 p-0.5 rounded-full border border-gray-300 data-[state=checked]:border-black"
+            >
+              <div className="w-full h-full rounded-full bg-black" />
+            </RadioGroupItem>
           </div>
         </RadioGroup>
       </div>
@@ -138,7 +126,7 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
             onCheckedChange={(value) =>
               setFormData((prev) => ({ ...prev, formLabels: value }))
             }
-            className="data-[state=checked]:bg-[#91FF86] data-[state=checked]:border-black data-[state=checked]:border-2 [&>span]:bg-black"
+            className="data-[state=checked]:bg-[#91FF86] data-[state=checked]:border-black data-[state=checked]:border-1  [&>span]:bg-black"
           />
           <Label className="text-md font-medium">Turned ON</Label>
         </div>

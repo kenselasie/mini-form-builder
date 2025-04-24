@@ -157,11 +157,19 @@ const FormBuilder = ({
             {field.type === "radio" && (
               <RadioGroup>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option1" id={`radio-${field.id}-1`} />
+                  <RadioGroupItem
+                    data-testid={`radio-option-1-${field.id}`}
+                    value="option1"
+                    id={`radio-${field.id}-1`}
+                  />
                   <Label htmlFor={`radio-${field.id}-1`}>Option 1</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option2" id={`radio-${field.id}-2`} />
+                  <RadioGroupItem
+                    data-testid={`radio-option-2-${field.id}`}
+                    value="option2"
+                    id={`radio-${field.id}-2`}
+                  />
                   <Label htmlFor={`radio-${field.id}-2`}>Option 2</Label>
                 </div>
               </RadioGroup>
