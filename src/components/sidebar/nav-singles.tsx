@@ -30,7 +30,7 @@ export function NavSingles({
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>{headerTitle}</SidebarGroupLabel>
-      <SidebarMenu>
+      <SidebarMenu className="ml-3">
         {items.map((item) =>
           item.name !== "My Profile" ? (
             <SidebarMenuItem key={item.name}>
@@ -38,7 +38,7 @@ export function NavSingles({
                 asChild
                 className={`rounded-none hover:rounded-none border-l-4 border-l-transparent ${
                   item.isActive
-                    ? "bg-gray-600 border-l-cyan-300"
+                    ? "bg-gray-600 border-l-white-300"
                     : "hover:bg-gray-600"
                 }`}
               >
@@ -55,7 +55,7 @@ export function NavSingles({
                   asChild
                   className={`rounded-none hover:rounded-none border-l-4 border-l-transparent ${
                     item.isActive
-                      ? "bg-gray-600 border-l-cyan-300"
+                      ? "bg-gray-600 border-l-white-300"
                       : "hover:bg-gray-600"
                   }`}
                 >

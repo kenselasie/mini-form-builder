@@ -14,7 +14,7 @@ import {
 
 const MyForms = () => {
   const breadrumbData = [
-    { href: "#", label: "My Form" },
+    { href: "#", label: "My Forms" },
     { href: "#", label: "Create New Form" },
   ];
 
