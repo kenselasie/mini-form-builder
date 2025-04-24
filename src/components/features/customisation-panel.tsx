@@ -20,7 +20,7 @@ interface CustomisationPanelProps {
 
 const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
   const [formData, setFormData] = React.useState({
-    backgroundColor: "green",
+    backgroundColor: "white",
     fontFamily: "Roboto",
     formLabels: true,
   });
@@ -40,12 +40,12 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
         </label>
         <div className="flex flex-wrap items-center gap-4">
           {[
-            { value: "white", bgClass: "bg-white" },
-            { value: "green", bgClass: "bg-green-300" },
-            { value: "yellow", bgClass: "bg-yellow-300" },
-            { value: "blue", bgClass: "bg-blue-300" },
-            { value: "pink", bgClass: "bg-pink-300" },
-            { value: "black", bgClass: "bg-black" },
+            { value: "white", bgClass: "bg-white", color: "#ffffff" },
+            { value: "green", bgClass: "bg-green-300", color: "#86efac" },
+            { value: "yellow", bgClass: "bg-yellow-300", color: "#fde047" },
+            { value: "blue", bgClass: "bg-blue-300", color: "#93c5fd" },
+            { value: "pink", bgClass: "bg-pink-300", color: "#f9a8d4" },
+            { value: "black", bgClass: "bg-black", color: "#000000" },
           ].map((color) => (
             <div
               key={color.value}
@@ -92,14 +92,17 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
         <label className="block text-md font-semibold mb-1">Form Labels</label>
         <div className="flex items-center space-x-2">
           <Switch
+            id="turn-on"
             data-testid="form-labels-switch"
             checked={formData.formLabels}
             onCheckedChange={(value) =>
               setFormData((prev) => ({ ...prev, formLabels: value }))
             }
-            className="data-[state=checked]:bg-[#91FF86] data-[state=checked]:border-black data-[state=checked]:border-1  [&>span]:bg-black"
+            className="data-[state=checked]:bg-[#91FF86] border-2 border-black p-[2px] h-7 w-12 [&>span]:h-[18px] [&>span]:w-[20px] [&>span]:bg-black"
           />
-          <Label className="text-md font-medium">Turned ON</Label>
+          <Label htmlFor="turn-on" className="text-base font-normal">
+            Turned ON
+          </Label>
         </div>
       </div>
     </div>

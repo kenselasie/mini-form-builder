@@ -5,14 +5,11 @@ import { BreadcrumbResponsive } from "@/components/breadcrumb/breadcrumb";
 import CustomisationPanel from "@/components/features/customisation-panel";
 import FormBuilder from "@/components/features/form-builder";
 import { CustomiseFormDataType, Field } from "@/types/form-builder-types";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 const MyForms = () => {
+  const router = useRouter();
+
   const breadrumbData = [
     { href: "#", label: "My Forms" },
     { href: "#", label: "Create New Form" },
@@ -27,36 +24,23 @@ const MyForms = () => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const handleSubmit = () => {
-    setIsDialogOpen(true);
-  };
-
-  const formJson = {
-    title: formTitle,
-    fields: fields,
-    customisation: formData,
+    const formJson = {
+      title: formTitle,
+      fields: fields,
+      customisation: formData,
+    };
+    const encodedForm = encodeURIComponent(JSON.stringify(formJson));
+    router.push(`/render-form?form=${encodedForm}`);
   };
 
   return (
     <div className="p-30 h-full bg-blue-50">
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Create New Form</h1>
-          <Button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white px-10"
-          >
-            Publish Form
-          </Button>
-        </div>
-        <DialogContent className="max-w-[800px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Form JSON Preview</DialogTitle>
-          </DialogHeader>
-          <pre className="bg-slate-100 p-4 rounded-lg overflow-x-auto">
-            {JSON.stringify(formJson, null, 2)}
-          </pre>
-        </DialogContent>
-      </Dialog>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold">Create New Form</h1>
+        <Button onClick={handleSubmit} className="bg-blue-500 text-white px-10">
+          Publish Form
+        </Button>
+      </div>
 
       <div className="mb-5">
         <BreadcrumbResponsive items={breadrumbData} />
