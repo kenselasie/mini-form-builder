@@ -53,6 +53,11 @@ yarn cypress:open
 - Form validation
 - Responsive design
 
+## Additional Features
+
+- Drag and drop for element ordering
+- Implementation of husky to prevent broken pushes.
+
 ## Project Structure
 
 ```

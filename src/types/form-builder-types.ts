@@ -21,7 +21,7 @@ export interface Field {
 export interface CustomiseFormDataType {
   backgroundColor: string;
   fontFamily: string;
-  formLabels: Boolean;
+  formLabels: boolean;
   inputBackgroundColor?: string;
   borderColor?: string;
 }

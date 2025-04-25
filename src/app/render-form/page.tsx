@@ -1,11 +1,20 @@
 "use client";
 import * as React from "react";
+import { Suspense } from "react";
 import RenderForm from "@/components/features/render-form";
 import { FormJsonType } from "@/types/form-builder-types";
 import { useSearchParams } from "next/navigation";
 import { BreadcrumbResponsive } from "@/components/breadcrumb/breadcrumb";
 
 const RenderFormPage = () => {
+  return (
+    <Suspense fallback={<div>Loading form...</div>}>
+      <RenderFormContent />
+    </Suspense>
+  );
+};
+
+const RenderFormContent = () => {
   const searchParams = useSearchParams();
   const formParam = searchParams.get("form");
 

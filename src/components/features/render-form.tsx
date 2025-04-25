@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Suspense } from "react";
 import { FormJsonType } from "@/types/form-builder-types";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -295,51 +296,53 @@ const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
   };
 
   return (
-    <div
-      data-testid="preview-form"
-      className={`${getBgColorClass(
-        customisation?.backgroundColor
-      )} ${getFontFamilyClass(
-        customisation?.fontFamily
-      )} max-w-2xl mx-auto mt-10 p-6 rounded-lg shadow`}
-      style={{
-        fontFamily: customisation?.fontFamily || "Roboto",
-      }}
-    >
-      <h1 className="text-2xl font-bold mb-6">{title}</h1>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div
+        data-testid="preview-form"
+        className={`${getBgColorClass(
+          customisation?.backgroundColor
+        )} ${getFontFamilyClass(
+          customisation?.fontFamily
+        )} max-w-2xl mx-auto mt-10 p-6 rounded-lg shadow`}
+        style={{
+          fontFamily: customisation?.fontFamily || "Roboto",
+        }}
+      >
+        <h1 className="text-2xl font-bold mb-6">{title}</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {fields.map((field) => (
-          <div key={field.id} className="space-y-2">
-            {customisation?.formLabels &&
-              field.type !== "button" &&
-              field.type !== "checkbox" && (
-                <Label
-                  htmlFor={`field_${field.id}`}
-                  className="text-sm font-medium"
-                >
-                  {field.label}
-                  {field.validation?.required && (
-                    <span className="text-red-500 ml-1">*</span>
-                  )}
-                </Label>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {fields.map((field) => (
+            <div key={field.id} className="space-y-2">
+              {customisation?.formLabels &&
+                field.type !== "button" &&
+                field.type !== "checkbox" && (
+                  <Label
+                    htmlFor={`field_${field.id}`}
+                    className="text-sm font-medium"
+                  >
+                    {field.label}
+                    {field.validation?.required && (
+                      <span className="text-red-500 ml-1">*</span>
+                    )}
+                  </Label>
+                )}
+
+              {renderField(field)}
+
+              {errors[`field_${field.id}`] && (
+                <p className="text-sm text-red-500">
+                  {errors[`field_${field.id}`]?.message as string}
+                </p>
               )}
+            </div>
+          ))}
 
-            {renderField(field)}
-
-            {errors[`field_${field.id}`] && (
-              <p className="text-sm text-red-500">
-                {errors[`field_${field.id}`]?.message as string}
-              </p>
-            )}
-          </div>
-        ))}
-
-        <Button type="submit" className="w-full">
-          Submit
-        </Button>
-      </form>
-    </div>
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
+        </form>
+      </div>
+    </Suspense>
   );
 };
 
