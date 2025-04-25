@@ -31,16 +31,16 @@ const RenderFormContent = () => {
 
   return (
     <>
-      <div className="px-30 py-10 h-full bg-blue-50">
+      <div className="px-4 md:px-30 py-5 md:py-10 h-full bg-blue-50">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Rendered Form</h1>
+          <h1 className="text-xl md:text-2xl font-bold">Rendered Form</h1>
         </div>
-        <div className="mb-5">
+        <div className="mb-3 md:mb-5">
           <BreadcrumbResponsive items={breadrumbData} />
         </div>
 
-        <div className="gap-10">
-          <RenderForm {...formData} />;
+        <div className="gap-5 md:gap-10">
+          <RenderForm {...formData} />
         </div>
       </div>
     </>
