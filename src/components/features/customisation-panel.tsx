@@ -84,9 +84,18 @@ const CustomisationPanel = ({ onFormDataChange }: CustomisationPanelProps) => {
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Roboto">Roboto</SelectItem>
-            <SelectItem value="Arial">Arial</SelectItem>
-            <SelectItem value="Times New Roman">Times New Roman</SelectItem>
+            <SelectItem value="Roboto" data-testid="font-family-option-roboto">
+              Roboto
+            </SelectItem>
+            <SelectItem value="Arial" data-testid="font-family-option-arial">
+              Arial
+            </SelectItem>
+            <SelectItem
+              value="Times New Roman"
+              data-testid="font-family-option-times"
+            >
+              Times New Roman
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>

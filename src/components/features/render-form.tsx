@@ -1,6 +1,6 @@
+import * as React from "react";
 import { FormJsonType } from "@/types/form-builder-types";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,60 +14,99 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
+interface FormData {
+  [key: string]: string | boolean | number;
+}
 
 const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
-  const onSubmit = (data: any) => {
-    console.log("Form submitted:", data);
-    // Handle form submission
+  const onSubmit = (data: FormData) => {
+    console.log("Form Title:", title);
+    console.log("Form Fields:");
+
+    fields.forEach((field) => {
+      const fieldKey = `field_${field.id}`;
+      console.log(`${field.label} (${field.type}):`, {
+        value: data[fieldKey],
+        validation: field.validation,
+        options: field.options,
+      });
+    });
+
+    console.log(data);
   };
 
   const getValidationRules = (field: any) => {
     const rules: any = {};
 
     if (field.validation?.required) {
-      rules.required = `${field.label} is required`;
+      switch (field.type) {
+        case "switch":
+        case "checkbox":
+          rules.required = {
+            value: true,
+            message: `${field.label} must be checked`,
+          };
+          break;
+        case "radio":
+        case "dropdown":
+          rules.required = {
+            value: true,
+            message: `Please select a ${field.label}`,
+          };
+          break;
+        default:
+          rules.required = `${field.label} is required`;
+      }
     }
 
-    if (field.validation?.minLength) {
-      rules.minLength = {
-        value: field.validation.minLength,
-        message: `${field.label} must be at least ${field.validation.minLength} characters`,
-      };
-    }
-
-    if (field.validation?.maxLength) {
-      rules.maxLength = {
-        value: field.validation.maxLength,
-        message: `${field.label} must be at most ${field.validation.maxLength} characters`,
-      };
-    }
-
-    if (field.validation?.pattern) {
-      rules.pattern = {
-        value: new RegExp(field.validation.pattern),
-        message: `${field.label} has invalid format`,
-      };
-    }
-
-    if (field.type === "number") {
-      rules.valueAsNumber = true;
-      if (field.validation?.min) {
-        rules.min = {
-          value: field.validation.min,
-          message: `${field.label} must be at least ${field.validation.min}`,
+    // Only apply these validations for text-based fields
+    if (
+      ["text", "textarea", "email", "password", "number"].includes(field.type)
+    ) {
+      if (field.validation?.minLength) {
+        rules.minLength = {
+          value: field.validation.minLength,
+          message: `${field.label} must be at least ${field.validation.minLength} characters`,
         };
       }
-      if (field.validation?.max) {
-        rules.max = {
-          value: field.validation.max,
-          message: `${field.label} must be at most ${field.validation.max}`,
+
+      if (field.validation?.maxLength) {
+        rules.maxLength = {
+          value: field.validation.maxLength,
+          message: `${field.label} must be at most ${field.validation.maxLength} characters`,
         };
+      }
+
+      if (field.validation?.pattern) {
+        rules.pattern = {
+          value: new RegExp(field.validation.pattern),
+          message: `${field.label} has invalid format`,
+        };
+      }
+
+      if (field.type === "number") {
+        rules.valueAsNumber = true;
+        if (field.validation?.min) {
+          rules.min = {
+            value: field.validation.min,
+            message: `${field.label} must be at least ${field.validation.min}`,
+          };
+        }
+        if (field.validation?.max) {
+          rules.max = {
+            value: field.validation.max,
+            message: `${field.label} must be at most ${field.validation.max}`,
+          };
+        }
       }
     }
 
@@ -141,6 +180,44 @@ const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
           </Select>
         );
 
+      case "dropdown":
+        return (
+          <Controller
+            name={`field_${field.id}`}
+            control={control}
+            rules={getValidationRules(field)}
+            render={({ field: { onChange, value } }) => (
+              <Select onValueChange={onChange} value={String(value || "")}>
+                <SelectTrigger
+                  className={
+                    errors[`field_${field.id}`]
+                      ? "border-red-500 w-full"
+                      : "w-full"
+                  }
+                  style={{
+                    backgroundColor:
+                      customisation?.inputBackgroundColor || "white",
+                    borderColor: errors[`field_${field.id}`]
+                      ? "rgb(239 68 68)"
+                      : customisation?.borderColor || undefined,
+                  }}
+                >
+                  <SelectValue placeholder={field.label} />
+                </SelectTrigger>
+                <SelectContent>
+                  {field.options?.map(
+                    (option: { id: string; value: string; label: string }) => (
+                      <SelectItem key={option.id} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        );
+
       case "checkbox":
         return (
           <div className="flex items-center space-x-2">
@@ -153,23 +230,51 @@ const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
         );
 
       case "radio":
-        return field.options ? (
-          <RadioGroup
-            onValueChange={(value) => console.log(value)}
-            defaultValue={field.value}
-          >
-            {field.options.map((option: string) => (
-              <div key={option} className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value={option}
-                  id={`${field.id}-${option}`}
-                  {...register(`field_${field.id}`, getValidationRules(field))}
-                />
-                <Label htmlFor={`${field.id}-${option}`}>{option}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        ) : null;
+        return (
+          <Controller
+            name={`field_${field.id}`}
+            control={control}
+            rules={getValidationRules(field)}
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup onValueChange={onChange} value={String(value || "")}>
+                {field.options?.map(
+                  (option: { id: string; value: string; label: string }) => (
+                    <div
+                      key={option.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <RadioGroupItem
+                        value={option.value}
+                        id={`${field.id}-${option.value}`}
+                        className={
+                          errors[`field_${field.id}`] ? "border-red-500" : ""
+                        }
+                      />
+                      <Label htmlFor={`${field.id}-${option.value}`}>
+                        {option.label}
+                      </Label>
+                    </div>
+                  )
+                )}
+              </RadioGroup>
+            )}
+          />
+        );
+
+      case "switch":
+        return (
+          <div className="flex items-center space-x-2">
+            <Switch
+              id={`field_${field.id}`}
+              {...register(`field_${field.id}`, getValidationRules(field))}
+              onCheckedChange={(checked) => {
+                const event = { target: { value: checked } };
+                register(`field_${field.id}`).onChange(event);
+              }}
+            />
+            <Label htmlFor={`field_${field.id}`}>{field.label}</Label>
+          </div>
+        );
 
       default:
         return (
@@ -191,6 +296,7 @@ const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
 
   return (
     <div
+      data-testid="preview-form"
       className={`${getBgColorClass(
         customisation?.backgroundColor
       )} ${getFontFamilyClass(
@@ -205,17 +311,19 @@ const RenderForm = ({ title, fields, customisation }: FormJsonType) => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {fields.map((field) => (
           <div key={field.id} className="space-y-2">
-            {field.type !== "button" && field.type !== "checkbox" && (
-              <Label
-                htmlFor={`field_${field.id}`}
-                className="text-sm font-medium"
-              >
-                {field.label}
-                {field.validation?.required && (
-                  <span className="text-red-500 ml-1">*</span>
-                )}
-              </Label>
-            )}
+            {customisation?.formLabels &&
+              field.type !== "button" &&
+              field.type !== "checkbox" && (
+                <Label
+                  htmlFor={`field_${field.id}`}
+                  className="text-sm font-medium"
+                >
+                  {field.label}
+                  {field.validation?.required && (
+                    <span className="text-red-500 ml-1">*</span>
+                  )}
+                </Label>
+              )}
 
             {renderField(field)}
 

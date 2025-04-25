@@ -1,17 +1,21 @@
+export interface ValidationRules {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+  pattern?: string;
+  options?: string[];
+  customMessage?: string;
+}
+
 export interface Field {
   id: number;
   label: string;
   type: string;
   value: string;
-  required?: boolean;
-  validation?: {
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: string;
-    min?: number;
-    max?: number;
-  };
+  validation?: ValidationRules;
+  options?: { id: number; label: string; value: string }[];
 }
 
 export interface CustomiseFormDataType {

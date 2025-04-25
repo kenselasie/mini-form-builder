@@ -3,6 +3,7 @@ import * as React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectItem,
@@ -19,7 +20,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Field } from "@/types/form-builder-types";
+import { ValidationControls } from "@/components/ui/validation-controls";
+import { Field, ValidationRules } from "@/types/form-builder-types";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface FormBuilderProps {
   initialTitle?: string;
@@ -49,6 +57,7 @@ const FormBuilder = ({
     { label: "Radio button", type: "radio" },
     { label: "Checkbox", type: "checkbox" },
     { label: "Switch option", type: "switch" },
+    { label: "Text area", type: "textarea" },
   ];
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +72,38 @@ const FormBuilder = ({
     type: "type" | "label" = "type"
   ) => {
     const newFields = fields.map((field) =>
-      field.id === id ? { ...field, [type]: value } : field
+      field.id === id
+        ? {
+            ...field,
+            [type]: value,
+            ...((value === "dropdown" || value === "radio") && !field.options
+              ? {
+                  options: [
+                    { id: Date.now(), label: "Option 1", value: "option1" },
+                  ],
+                }
+              : {}),
+          }
+        : field
+    );
+    setFields(newFields);
+    onFieldsChange?.(newFields);
+  };
+
+  const handleValidationChange = (
+    id: number,
+    validationRules: Partial<ValidationRules>
+  ) => {
+    const newFields = fields.map((field) =>
+      field.id === id
+        ? {
+            ...field,
+            validation: {
+              ...field.validation,
+              ...validationRules,
+            },
+          }
+        : field
     );
     setFields(newFields);
     onFieldsChange?.(newFields);
@@ -96,6 +136,59 @@ const FormBuilder = ({
     setSearchField("");
   };
 
+  const handleOptionChange = (
+    fieldId: number,
+    optionId: number,
+    value: string,
+    type: "label" | "value" = "label"
+  ) => {
+    const newFields = fields.map((field) =>
+      field.id === fieldId
+        ? {
+            ...field,
+            options: field.options?.map((opt) =>
+              opt.id === optionId ? { ...opt, [type]: value } : opt
+            ),
+          }
+        : field
+    );
+    setFields(newFields);
+    onFieldsChange?.(newFields);
+  };
+
+  const handleAddOption = (fieldId: number) => {
+    const newFields = fields.map((field) =>
+      field.id === fieldId
+        ? {
+            ...field,
+            options: [
+              ...(field.options || []),
+              {
+                id: Date.now(),
+                label: `Option ${(field.options?.length || 0) + 1}`,
+                value: `option${(field.options?.length || 0) + 1}`,
+              },
+            ],
+          }
+        : field
+    );
+    setFields(newFields);
+    onFieldsChange?.(newFields);
+  };
+
+  const handleDeleteOption = (fieldId: number, optionId: number) => {
+    const newFields = fields.map((field) =>
+      field.id === fieldId
+        ? {
+            ...field,
+            options: field.options?.filter((opt) => opt.id !== optionId),
+          }
+        : field
+    );
+    setFields(newFields);
+    onFieldsChange?.(newFields);
+  };
+
   return (
     <div
       data-testid="form-builder-container"
@@ -116,139 +209,291 @@ const FormBuilder = ({
         <div
           key={field.id}
           data-testid={`field-container-${field.id}`}
-          className="mb-4 flex justify-center items-center gap-2"
+          className="mb-4 flex justify-center gap-2"
         >
           <div className="flex-1">
-            <input
-              data-testid={`field-label-${field.id}`}
-              className="block text-sm font-medium mb-1 w-full bg-transparent border-none outline-none focus:ring-0 focus:outline-none focus:border-none active:outline-none active:ring-0"
-              value={field.label}
-              onChange={(e) =>
-                handleFieldChange(field.id, e.target.value, "label")
-              }
-              placeholder="Field Label"
-            />
-            {field.type === "text" && (
-              <Input
-                data-testid={`field-input-${field.id}`}
-                placeholder={field.label}
-                className="border-2 border-gray-500 rounded"
-                value={field.value}
-                disabled
-                onChange={(e) => handleFieldChange(field.id, e.target.value)}
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                data-testid={`field-label-${field.id}`}
+                className="text-sm font-medium flex-1 bg-transparent border-none outline-none focus:ring-0 focus:outline-none focus:border-none active:outline-none active:ring-0"
+                value={field.label}
+                onChange={(e) =>
+                  handleFieldChange(field.id, e.target.value, "label")
+                }
+                placeholder="Field Label"
               />
-            )}
-            {field.type === "button" && (
-              <Button disabled className="w-full">
-                {field.label}
-              </Button>
-            )}
-            {field.type === "dropdown" && (
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder={field.label} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="option1">Option 1</SelectItem>
-                  <SelectItem value="option2">Option 2</SelectItem>
-                  <SelectItem value="option3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-            {field.type === "radio" && (
-              <RadioGroup>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    data-testid={`radio-option-1-${field.id}`}
-                    value="option1"
-                    id={`radio-${field.id}-1`}
-                  />
-                  <Label htmlFor={`radio-${field.id}-1`}>Option 1</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    data-testid={`radio-option-2-${field.id}`}
-                    value="option2"
-                    id={`radio-${field.id}-2`}
-                  />
-                  <Label htmlFor={`radio-${field.id}-2`}>Option 2</Label>
-                </div>
-              </RadioGroup>
-            )}
-            {field.type === "checkbox" && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id={`checkbox-${field.id}`}
-                  className="h-4 w-4"
+              <div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    data-testid={`field-menu-${field.id}`}
+                    className="w-9 h-9 flex items-center justify-center border border-gray-500 rounded"
+                  >
+                    <MoreVertical size={16} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    data-testid={`field-menu-content-${field.id}`}
+                  >
+                    <DropdownMenuItem
+                      data-testid={`field-type-text-${field.id}`}
+                      onClick={() => handleFieldChange(field.id, "text")}
+                    >
+                      Text field
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "button")}
+                    >
+                      Button
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "dropdown")}
+                    >
+                      Dropdown
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "radio")}
+                    >
+                      Radio button
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "checkbox")}
+                    >
+                      Checkbox
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "switch")}
+                    >
+                      Switch option
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleFieldChange(field.id, "textarea")}
+                    >
+                      Text area
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-testid={`field-delete-${field.id}`}
+                      onClick={() =>
+                        setFields((prev) =>
+                          prev.filter(
+                            (existingField) => existingField.id !== field.id
+                          )
+                        )
+                      }
+                      className="text-red-500"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            <div className="mb-2">
+              {field.type === "text" && (
+                <Input
+                  data-testid={`field-input-${field.id}`}
+                  placeholder={field.label}
+                  className="border-2 border-gray-500 rounded"
+                  value={field.value}
+                  disabled
                 />
-                <Label htmlFor={`checkbox-${field.id}`}>{field.label}</Label>
-              </div>
-            )}
-            {field.type === "switch" && (
-              <div className="flex items-center space-x-2">
-                <Switch />
-                <Label>{field.label}</Label>
-              </div>
-            )}
-          </div>
-          <div className="mt-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                data-testid={`field-menu-${field.id}`}
-                className="w-9 h-9 flex items-center justify-center border border-gray-500 rounded"
+              )}
+              {field.type === "textarea" && (
+                <Textarea
+                  data-testid={`field-textarea-${field.id}`}
+                  placeholder={field.label}
+                  className="border-2 border-gray-500 min-h-[100px] resize-y"
+                  value={field.value}
+                  disabled
+                />
+              )}
+              {field.type === "button" && (
+                <Button disabled className="w-full">
+                  {field.label}
+                </Button>
+              )}
+              {field.type === "dropdown" && (
+                <>
+                  <Select>
+                    <SelectTrigger
+                      data-testid={`field-dropdown-${field.id}`}
+                      className="w-full border-gray-400"
+                    >
+                      <SelectValue placeholder={field.label} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.options?.map((option) => (
+                        <SelectItem
+                          key={option.id}
+                          value={option.value}
+                          data-testid={`dropdown-option-${field.id}-${option.id}`}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div
+                    data-testid={`field-options-${field.id}`}
+                    className="mt-2 space-y-2"
+                  >
+                    {field.options?.map((option) => (
+                      <div
+                        key={option.id}
+                        data-testid={`option-container-${field.id}-${option.id}`}
+                        className="flex items-center gap-2"
+                      >
+                        <Input
+                          data-testid={`option-input-${field.id}-${option.id}`}
+                          placeholder="Option Label"
+                          value={option.label}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              field.id,
+                              option.id,
+                              e.target.value
+                            )
+                          }
+                          className="flex-1"
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={option.value}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              field.id,
+                              option.id,
+                              e.target.value,
+                              "value"
+                            )
+                          }
+                          className="flex-1"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteOption(field.id, option.id)
+                          }
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      data-testid={`add-option-button-${field.id}`}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAddOption(field.id)}
+                      className="w-full mt-2"
+                    >
+                      Add Option
+                    </Button>
+                  </div>
+                </>
+              )}
+              {field.type === "radio" && (
+                <RadioGroup data-testid={`field-radio-${field.id}`}>
+                  {field.options?.map((option) => (
+                    <div
+                      key={option.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <RadioGroupItem value={option.value} disabled />
+                      <Label>{option.label}</Label>
+                    </div>
+                  ))}
+                  <div className="mt-2 space-y-2">
+                    {field.options?.map((option) => (
+                      <div key={option.id} className="flex items-center gap-2">
+                        <Input
+                          data-testid={`option-label-${field.id}-${option.id}`}
+                          placeholder="Option Label"
+                          value={option.label}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              field.id,
+                              option.id,
+                              e.target.value,
+                              "label"
+                            )
+                          }
+                          className="flex-1"
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={option.value}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              field.id,
+                              option.id,
+                              e.target.value,
+                              "value"
+                            )
+                          }
+                          className="flex-1"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteOption(field.id, option.id)
+                          }
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      data-testid={`add-option-button-${field.id}`}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAddOption(field.id)}
+                      className="w-full mt-2"
+                    >
+                      Add Option
+                    </Button>
+                  </div>
+                </RadioGroup>
+              )}
+              {field.type === "checkbox" && (
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${field.id}`}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor={`checkbox-${field.id}`}>{field.label}</Label>
+                </div>
+              )}
+              {field.type === "switch" && (
+                <div className="flex items-center space-x-2">
+                  <Switch />
+                  <Label>{field.label}</Label>
+                </div>
+              )}
+            </div>
+
+            {field.type !== "button" && (
+              <Accordion
+                type="single"
+                collapsible
+                className="border rounded-md"
               >
-                <MoreVertical size={16} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                data-testid={`field-menu-content-${field.id}`}
-              >
-                <DropdownMenuItem
-                  data-testid={`field-type-text-${field.id}`}
-                  onClick={() => handleFieldChange(field.id, "text")}
-                >
-                  Text field
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFieldChange(field.id, "button")}
-                >
-                  Button
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFieldChange(field.id, "dropdown")}
-                >
-                  Dropdown
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFieldChange(field.id, "radio")}
-                >
-                  Radio button
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFieldChange(field.id, "checkbox")}
-                >
-                  Checkbox
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFieldChange(field.id, "switch")}
-                >
-                  Switch option
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-testid={`field-delete-${field.id}`}
-                  onClick={() =>
-                    setFields((prev) =>
-                      prev.filter(
-                        (existingField) => existingField.id !== field.id
-                      )
-                    )
-                  }
-                  className="text-red-500"
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <AccordionItem value="validation">
+                  <AccordionTrigger className="px-3 py-2 text-sm">
+                    Validation Rules
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 py-2">
+                    <ValidationControls
+                      field={field}
+                      onValidationChange={(rules) =>
+                        handleValidationChange(field.id, rules)
+                      }
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
           </div>
         </div>
       ))}

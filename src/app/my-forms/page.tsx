@@ -21,7 +21,6 @@ const MyForms = () => {
     { id: 1, label: "First Name", type: "text", value: "" },
     { id: 2, label: "Last Name", type: "text", value: "" },
   ]);
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const handleSubmit = () => {
     const formJson = {
@@ -29,6 +28,7 @@ const MyForms = () => {
       fields: fields,
       customisation: formData,
     };
+    console.log(formJson);
     const encodedForm = encodeURIComponent(JSON.stringify(formJson));
     router.push(`/render-form?form=${encodedForm}`);
   };
