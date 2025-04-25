@@ -34,7 +34,7 @@ const MyForms = () => {
   };
 
   return (
-    <div className="p-30 h-full bg-blue-50">
+    <div className="p-4 md:p-30 min-h-screen bg-blue-50">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Create New Form</h1>
         <Button onClick={handleSubmit} className="bg-blue-500 text-white px-10">
@@ -46,8 +46,8 @@ const MyForms = () => {
         <BreadcrumbResponsive items={breadrumbData} />
       </div>
 
-      <div className="flex gap-10">
-        <div className="w-[60%]">
+      <div className="flex flex-col lg:flex-row gap-10 h-full">
+        <div className="w-full lg:w-[60%]">
           <FormBuilder
             initialTitle={formTitle}
             initialFields={fields}
@@ -55,8 +55,12 @@ const MyForms = () => {
             onFieldsChange={(fields) => setFields(fields)}
           />
         </div>
-        <div className="w-[40%]">
-          <CustomisationPanel onFormDataChange={(data) => setFormData(data)} />
+        <div className="w-full lg:w-[40%] h-full">
+          <div className="sticky top-4">
+            <CustomisationPanel
+              onFormDataChange={(data) => setFormData(data)}
+            />
+          </div>
         </div>
       </div>
     </div>
